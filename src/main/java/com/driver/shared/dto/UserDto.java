@@ -1,6 +1,15 @@
 package com.driver.shared.dto;
 
-public class UserDto{
+import lombok.*;
+
+import java.io.Serializable;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class UserDto implements Serializable {
 
 	private long id;
 	private String userId;
