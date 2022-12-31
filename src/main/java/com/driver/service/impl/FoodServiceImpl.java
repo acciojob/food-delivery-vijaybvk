@@ -61,11 +61,17 @@ public class FoodServiceImpl implements FoodService{
 
     @Override
     public List<FoodDto> getFoods() {
-        List<FoodEntity> foodEntities= (List<FoodEntity>) foodRepository.findAll();
-        List<FoodDto> foodDtos=null;
-        for(FoodEntity foodEntity:foodEntities){
-            foodDtos.add(FoodDto.builder().foodName(foodEntity.getFoodName()).foodPrice(foodEntity.getFoodPrice()).foodId(foodEntity.getFoodId()).foodCategory(foodEntity.getFoodCategory()).id(foodEntity.getId()).build());
+        List<FoodDto> foodList=new ArrayList<>();
+        Iterable<FoodEntity> list = foodRepository.findAll();
+        for(FoodEntity foodEntity : list){
+
+            FoodDto foodDto = FoodDto.builder().id(foodEntity.getId()).foodId(foodEntity.getFoodId()).
+                    foodName(foodEntity.getFoodName()).foodCategory(foodEntity.getFoodCategory()).
+                    foodPrice(foodEntity.getFoodPrice()).build();
+
+            foodList.add(foodDto);
         }
-        return foodDtos;
+        return foodList;
     }
+
 }

@@ -56,11 +56,17 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public List<OrderDto> getOrders() {
-        List<OrderDto> orderDtos=null;
-        List<OrderEntity> orderEntities= (List<OrderEntity>) orderRepository.findAll();
-        for(OrderEntity orderEntity:orderEntities){
-            orderDtos.add(OrderDto.builder().orderId(orderEntity.getOrderId()).id(orderEntity.getId()).cost(orderEntity.getCost()).items(orderEntity.getItems()).status(orderEntity.isStatus()).userId(orderEntity.getUserId()).build());
+        List<OrderDto> orderList = new ArrayList<>();
+        Iterable<OrderEntity> list = orderRepository.findAll();
+        for(OrderEntity orderEntity :list){
+
+            OrderDto orderDto = OrderDto.builder().id(orderEntity.getId()).userId(orderEntity.getUserId()).
+                    orderId(orderEntity.getOrderId()).items(orderEntity.getItems()).
+                    cost(orderEntity.getCost()).status(orderEntity.isStatus()).build();
+
+            orderList.add(orderDto);
         }
-        return orderDtos;
+        return orderList;
     }
+
 }

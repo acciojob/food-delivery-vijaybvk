@@ -73,11 +73,18 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<UserDto> getUsers() {
-        List<UserEntity> userEntities= (List<UserEntity>) userRepository.findAll();
-        List<UserDto> userDtos = null;
-        for(UserEntity userEntity:userEntities){
-            userDtos.add(UserDto.builder().userId(userEntity.getUserId()).firstName(userEntity.getFirstName()).lastName(userEntity.getLastName()).email(userEntity.getEmail()).id(userEntity.getId()).build());
+        List<UserDto> userList = new ArrayList<>();
+        Iterable<UserEntity> list = userRepository.findAll();
+        for(UserEntity userEntity : list){
+
+            UserDto userDto = UserDto.builder().id(userEntity.getId()).userId(userEntity.getUserId()).
+                    firstName(userEntity.getFirstName()).lastName(userEntity.getLastName()).
+                    email(userEntity.getEmail()).build();
+
+            userList.add(userDto);
         }
-        return userDtos;
+
+        return userList;
     }
+
 }
