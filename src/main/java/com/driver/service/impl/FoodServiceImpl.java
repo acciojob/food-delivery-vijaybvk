@@ -27,8 +27,7 @@ public class FoodServiceImpl implements FoodService{
     public FoodDto getFoodById(String foodId) throws Exception {
         FoodEntity foodEntity=foodRepository.findByFoodId(foodId);
         if(foodEntity==null){
-            System.out.println("Food Entity doesn't exist");
-            return null;
+            throw new Exception("food is  not found with the given foodId");
         }
         FoodDto foodDto=FoodDto.builder().id(foodEntity.getId()).foodId(foodEntity.getFoodId()).foodCategory(foodEntity.getFoodCategory())
                 .foodName(foodEntity.getFoodName()).foodPrice(foodEntity.getFoodPrice()).build();
@@ -37,21 +36,26 @@ public class FoodServiceImpl implements FoodService{
 
     @Override
     public FoodDto updateFoodDetails(String foodId, FoodDto foodDetails) throws Exception {
-        FoodEntity foodEntity=foodRepository.findByFoodId(foodId);
-        if(foodEntity==null){
-            System.out.println("Food Entity doesn't exist");
-            return null;
+        if(foodRepository.findByFoodId(foodId)==null){
+            throw new Exception(" food doesn't exists with given food id");
         }
-        FoodDto foodDto=foodDetails;
-        foodDto.setId(foodEntity.getId());
-        foodRepository.updateFoodEntity(foodEntity.getId(), foodDetails.getFoodId(), foodDetails.getFoodName(), foodDetails.getFoodPrice(), foodDetails.getFoodCategory());
-        return foodDto;
+        FoodEntity foodEntity = FoodEntity.builder()
+                .id(foodDetails.getId())
+                .foodId(foodId)
+                .foodName(foodDetails.getFoodName())
+                .foodCategory(foodDetails.getFoodCategory())
+                .foodPrice(foodDetails.getFoodPrice())
+                .build();
+        foodRepository.save(foodEntity);
+        return foodDetails;
     }
 
     @Override
     public void deleteFoodItem(String id) throws Exception {
         FoodEntity foodEntity=foodRepository.findByFoodId(id);
-        if(foodEntity==null) System.out.println("Food Entity doesn't exist");
+        if(foodEntity==null){
+            throw new Exception("Food doesn't exist");
+        }
         foodRepository.delete(foodEntity);
     }
 

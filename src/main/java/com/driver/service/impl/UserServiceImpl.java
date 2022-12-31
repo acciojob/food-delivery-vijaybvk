@@ -19,8 +19,7 @@ public class UserServiceImpl implements UserService{
     public UserDto createUser(UserDto user) throws Exception {
         UserEntity userEntity=userRepository.findByUserId(user.getUserId());
         if(userEntity!=null){
-            System.out.println("User entity already exists");
-            return null;
+            throw new Exception("User Already Exists ");
         }
         UserEntity userEntity2=UserEntity.builder().userId(user.getUserId()).email(user.getEmail()).firstName(user.getFirstName())
                 .lastName(user.getLastName()).build();
@@ -32,8 +31,7 @@ public class UserServiceImpl implements UserService{
     public UserDto getUser(String email) throws Exception {
         UserEntity userEntity=userRepository.findByEmail(email);
         if(userEntity==null){
-            System.out.println("User entity doesn't exist");
-            return null;
+            throw new Exception("User doesn't exist");
         }
         UserDto userDto=UserDto.builder().id(userEntity.getId()).userId(userEntity.getUserId()).firstName(userEntity.getFirstName())
                 .lastName(userEntity.getLastName()).email(userEntity.getEmail()).build();
@@ -44,8 +42,7 @@ public class UserServiceImpl implements UserService{
     public UserDto getUserByUserId(String userId) throws Exception {
         UserEntity userEntity=userRepository.findByUserId(userId);
         if(userEntity==null){
-            System.out.println("User entity doesn't exist");
-            return null;
+            throw new Exception("User doesn't exist");
         }
         UserDto userDto=UserDto.builder().id(userEntity.getId()).userId(userEntity.getUserId()).firstName(userEntity.getFirstName())
                 .lastName(userEntity.getLastName()).email(userEntity.getEmail()).build();
@@ -56,8 +53,7 @@ public class UserServiceImpl implements UserService{
     public UserDto updateUser(String userId, UserDto user) throws Exception {
         UserEntity userEntity=userRepository.findByUserId(userId);
         if(userEntity==null){
-            System.out.println("User entity doesn't exist");
-            return null;
+            throw new Exception("User doesn't exist");
         }
         UserDto userDto=user;
         userDto.setId(userEntity.getId());
@@ -67,7 +63,11 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void deleteUser(String userId) throws Exception {
-        userRepository.delete(userRepository.findByUserId(userId));
+        UserEntity userEntity = userRepository.findByUserId(userId);
+        if(userEntity==null){
+            throw new Exception("User doesn't exist");
+        }
+        userRepository.deleteById(userEntity.getId());
     }
 
 

@@ -26,8 +26,7 @@ public class OrderServiceImpl implements OrderService{
     public OrderDto getOrderById(String orderId) throws Exception {
         OrderEntity orderEntity=orderRepository.findByOrderId(orderId);
         if(orderEntity==null){
-            System.out.println("Order entity doesn't exist");
-            return null;
+            throw new Exception("Order doesn't exist");
         }
         OrderDto orderDto=OrderDto.builder().id(orderEntity.getId()).orderId(orderEntity.getOrderId()).cost(orderEntity.getCost())
                 .items(orderEntity.getItems()).status(orderEntity.isStatus()).userId(orderEntity.getUserId()).build();
@@ -38,8 +37,7 @@ public class OrderServiceImpl implements OrderService{
     public OrderDto updateOrderDetails(String orderId, OrderDto order) throws Exception {
         OrderEntity orderEntity=orderRepository.findByOrderId(orderId);
         if(orderEntity==null){
-            System.out.println("Order entity doesn't exist");
-            return null;
+            throw new Exception("Order doesn't exist");
         }
         OrderDto orderDto=order;
         orderDto.setId(orderEntity.getId());
@@ -50,7 +48,9 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public void deleteOrder(String orderId) throws Exception {
         OrderEntity orderEntity=orderRepository.findByOrderId(orderId);
-        if(orderEntity==null) System.out.println("Order entity doesn't exist");
+        if(orderEntity==null){
+            throw new Exception("Order doesn't exists with given order Id exists");
+        }
         orderRepository.delete(orderEntity);
     }
 
